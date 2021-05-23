@@ -3,6 +3,7 @@ import {LikeButtonComponent} from "./button/like-button.component";
 import {ApproveButtonComponent} from "./button/approve-button.component";
 import {getCurrentUserId} from "../../fake-user";
 import {EditButtonComponent} from "./button/edit-button.component";
+import {EditIdiomComponent} from "./edit-idiom.component";
 
 export interface IIdiom {
   id: string;
@@ -18,6 +19,7 @@ export interface IIdiomProps {
   idiom: IIdiom;
   toggleLikeFn(idiomId: string): void;
   toggleApproveFn(idiomId: string): void;
+  updateIdiomFn(idiomId: string, updatedIdiom: IIdiom): void
 }
 
 export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
@@ -44,22 +46,38 @@ export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
     setEditMode(editMode => !editMode);
   }
 
+  const resetHandler = () => {
+    setEditMode(false);
+  }
+
+  const updateIdiom = (updatedIdiom: IIdiom) => {
+    props.updateIdiomFn(props.idiom.id, updatedIdiom);
+    setEditMode(false);
+  }
+
   return (
     <div className="card m-2">
         <div className="card-body">
-          <h5 contentEditable={editMode} className="card-title">{props.idiom.idiom}</h5>
-          <p contentEditable={editMode} className="card-text">{props.idiom.definition}</p>
-          <blockquote className="blockquote">
-            <p contentEditable={editMode}>{props.idiom.quote}</p>
-            <footer className="blockquote-footer" contentEditable={editMode}>{props.idiom.source}</footer>
-          </blockquote>
-          <EditButtonComponent pressed={editMode} toggleEditFn={toggleEditMode}/>
-          {!editMode && <ApproveButtonComponent approved={props.idiom.approved}
-                                  toggleApproveFn={toggleApproveFn}
-          />}
+          {!editMode && <>
+            <h5 onInput={(e) => console.log()} contentEditable={editMode} className="card-title">{props.idiom.idiom}</h5>
+            <p className="card-text">{props.idiom.definition}</p>
+            <blockquote className="blockquote">
+              <p>{props.idiom.quote}</p>
+              <footer className="blockquote-footer">{props.idiom.source}</footer>
+            </blockquote>
+            <EditButtonComponent pressed={editMode} toggleEditFn={toggleEditMode}/>
+            {!editMode && <ApproveButtonComponent approved={props.idiom.approved}
+                                    toggleApproveFn={toggleApproveFn}
+            />}
+            </>}
           {!editMode && <LikeButtonComponent pressed={isLikedByCurrentUser()}
                                numberOfLikes={getNumberOfLikes()}
                                toggleLikeFn={toggleLikeFn}
+          />}
+          {editMode && <EditIdiomComponent idiom={props.idiom}
+                                           resetHandler={resetHandler}
+                                           submitHandler={updateIdiom}
+
           />}
         </div>
     </div>

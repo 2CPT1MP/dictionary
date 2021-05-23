@@ -26,4 +26,31 @@ export const fakeIdioms = [
     likes: ["NRXMP7", "2CPT1MP"],
     approved: false
   },
+  {
+    id: "4",
+    idiom: "Idiom 1",
+    definition: "Definition 1",
+    quote: "Some quote",
+    source: "Unknown Source",
+    likes: ["NRXMP7", "2CPT1MP"],
+    approved: false
+  },
+  {
+    id: "5",
+    idiom: "Idiom 1",
+    definition: "Definition 1",
+    quote: "Some quote",
+    source: "Unknown Source",
+    likes: ["NRXMP7", "2CPT1MP"],
+    approved: false
+  },
+  {
+    id: "6",
+    idiom: "Idiom 1",
+    definition: "Definition 1",
+    quote: "Some quote",
+    source: "Unknown Source",
+    likes: ["NRXMP7", "2CPT1MP"],
+    approved: false
+  }
 ];

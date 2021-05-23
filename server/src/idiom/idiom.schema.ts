@@ -29,8 +29,8 @@ export class Idiom {
   @Prop({ default: false })
   approved: boolean;
 
-  @Prop({ default: 0 })
-  likes: number;
+  @Prop()
+  likes: string[];
 }
 
 export const IdiomSchema = SchemaFactory.createForClass(Idiom);

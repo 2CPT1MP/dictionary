@@ -8,6 +8,16 @@ class IListOfIdiomsProps {}
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>(fakeIdioms);
 
+
+  const updateIdiom = (idiomId: string, updatedIdiom: IIdiom) => {
+    setIdioms(idioms.map(idiom => {
+      if (idiom.id === idiomId)
+        return {...idiom, ...updatedIdiom};
+      return idiom;
+    }));
+  }
+
+
   const toggleLikeIdiom = (idiomId: string) => {
     setIdioms(idioms.map(idiom => {
       if (idiom.id === idiomId) {
@@ -39,6 +49,7 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
           <IdiomComponent idiom={idiom}
                           toggleLikeFn={toggleLikeIdiom}
                           toggleApproveFn={toggleApproveIdiom}
+                          updateIdiomFn={updateIdiom}
                           key={idiom.id}
           />
         </div>

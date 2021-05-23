@@ -37,11 +37,11 @@ export class IdiomService {
   }
 
   async likeIdiom(idiomId: string) {
-    const targetIdiom = await this.getIdiomById(idiomId);
-    const likeCount = targetIdiom.likes;
+    //const targetIdiom = await this.getIdiomById(idiomId);
+    //const likeCount = targetIdiom.likes;
     return this.idiomModel.updateOne(
       { _id: idiomId },
-      { $set: { likes: likeCount + 1 } },
+      { $push: { likes: '2CPT1MP' } },
     );
   }
 }
