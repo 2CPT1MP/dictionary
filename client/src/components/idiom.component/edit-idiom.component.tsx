@@ -9,12 +9,13 @@ export interface IUpdateIdiom {
 }
 
 interface IEditIdiomProps {
-  idiom: IIdiom,
+  idiom: IUpdateIdiom,
+  title?: string
   resetHandler(): void;
   submitHandler(updatedIdiom: IUpdateIdiom): void;
 }
 
-export const EditIdiomComponent: React.FC<IEditIdiomProps> = ({idiom, resetHandler, submitHandler}) => {
+export const EditIdiomComponent: React.FC<IEditIdiomProps> = ({idiom, resetHandler, submitHandler, title="Редактирование"}) => {
   const [formData, setFormData] = useState({
     idiom: idiom.idiom,
     definition: idiom.definition,
@@ -55,22 +56,22 @@ export const EditIdiomComponent: React.FC<IEditIdiomProps> = ({idiom, resetHandl
 
   return (
     <form onSubmit={onSubmit} onReset={onReset}>
-      <h5>Редактирование</h5>
+      <h5>{title}</h5>
       <div className="mb-3">
         <label htmlFor="idiom" className="form-label">Тело</label>
-        <input type="text" className="form-control no-border" id="definition" name={"idiom"} value={formData.idiom} onChange={onChange}/>
+        <input type="text" className="form-control no-border" id="definition" name={"idiom"} value={formData.idiom} onChange={onChange} required/>
       </div>
       <div className="mb-3">
         <label htmlFor="definition" className="form-label">Определение</label>
-        <input type="text" className="form-control" id="definition" name={"definition"} value={formData.definition} onChange={onChange}/>
+        <input type="text" className="form-control" id="definition" name={"definition"} value={formData.definition} onChange={onChange} required/>
       </div>
       <div className="mb-3">
         <label htmlFor="quote" className="form-label">Цитата</label>
-        <input type="text" className="form-control" id="quote" name={"quote"} value={formData.quote} onChange={onChange}/>
+        <input type="text" className="form-control" id="quote" name={"quote"} value={formData.quote} onChange={onChange} required/>
       </div>
       <div className="mb-3">
         <label htmlFor="source" className="form-label">Источник</label>
-        <input type="text" className="form-control" id="source" name={"source"} value={formData.source} onChange={onChange}/>
+        <input type="text" className="form-control" id="source" name={"source"} value={formData.source} onChange={onChange} required/>
       </div>
       <button className={"btn shadow-none"} type={"submit"}>{submitIcon}</button>
       <button className={"btn shadow-none"} type={"reset"}>{resetIcon}</button>

@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import { IdiomComponent, IIdiom } from "./idiom.component";
 import { getCurrentUserId } from "../../fake-user";
 import { fakeIdioms } from "../../fake-idioms";
+import {AddIdiomComponent} from "./add-idiom.component";
+import {IUpdateIdiom} from "./edit-idiom.component";
 
 class IListOfIdiomsProps {}
 
@@ -9,12 +11,19 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>(fakeIdioms);
 
 
-  const updateIdiom = (idiomId: string, updatedIdiom: IIdiom) => {
+  const updateIdiom = (idiomId: string, updatedIdiom: IUpdateIdiom) => {
     setIdioms(idioms.map(idiom => {
       if (idiom.id === idiomId)
         return {...idiom, ...updatedIdiom};
       return idiom;
     }));
+  }
+
+  const addIdiom = (newIdiom: IUpdateIdiom) => {
+    setIdioms([
+      {...newIdiom, id: "", likes: [], approved: false},
+      ...idioms
+    ]);
   }
 
 
@@ -44,6 +53,7 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
 
   return (
     <div className={"row"}>
+      <AddIdiomComponent addIdiomFn={addIdiom}/>
       {idioms.map((idiom) =>
         <div className={"col-sm-12 col-lg-6 col-xxl-4"}>
           <IdiomComponent idiom={idiom}
