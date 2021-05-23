@@ -6,7 +6,7 @@ import {EditButtonComponent} from "./button/edit-button.component";
 import {EditIdiomComponent} from "./edit-idiom.component";
 
 export interface IIdiom {
-  id: string;
+  _id: string;
   idiom: string;
   definition: string;
   quote: string;
@@ -26,11 +26,11 @@ export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const toggleLikeFn = () => {
-    props.toggleLikeFn(props.idiom.id);
+    props.toggleLikeFn(props.idiom._id);
   }
 
   const toggleApproveFn = () => {
-    props.toggleApproveFn(props.idiom.id);
+    props.toggleApproveFn(props.idiom._id);
   }
 
   const getNumberOfLikes = () => {
@@ -51,7 +51,7 @@ export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
   }
 
   const updateIdiom = (updatedIdiom: IIdiom) => {
-    props.updateIdiomFn(props.idiom.id, updatedIdiom);
+    props.updateIdiomFn(props.idiom._id, updatedIdiom);
     setEditMode(false);
   }
 

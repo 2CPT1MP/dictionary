@@ -1,27 +1,42 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { IdiomComponent, IIdiom } from "./idiom.component";
 import { getCurrentUserId } from "../../fake-user";
-import { fakeIdioms } from "../../fake-idioms";
 import {AddIdiomComponent} from "./add-idiom.component";
 import {IUpdateIdiom} from "./edit-idiom.component";
+import axios, {AxiosResponse} from "axios";
 
 class IListOfIdiomsProps {}
 
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
-  const [idioms, setIdioms] = useState<IIdiom[]>(fakeIdioms);
+  const [idioms, setIdioms] = useState<IIdiom[]>([]);
+
+  useEffect(() => {
+    const fetchIdioms = async () => {
+      const response: AxiosResponse<IIdiom[]> = await axios.get("http://localhost:5000/api/idioms");
+      const idioms = response.data;
+      console.log(idioms);
+      setIdioms(idioms);
+    }
+    fetchIdioms();
+  }, []);
 
 
-  const updateIdiom = (idiomId: string, updatedIdiom: IUpdateIdiom) => {
+  const updateIdiom = async (idiomId: string, updatedIdiom: IUpdateIdiom) => {
+    const response = await axios.patch(`http://localhost:5000/api/idioms/${idiomId}`, updatedIdiom);;
+
     setIdioms(idioms.map(idiom => {
-      if (idiom.id === idiomId)
+      if (idiom._id === idiomId)
         return {...idiom, ...updatedIdiom};
       return idiom;
     }));
   }
 
-  const addIdiom = (newIdiom: IUpdateIdiom) => {
+  const addIdiom = async (newIdiom: IUpdateIdiom) => {
+    const response = await axios.post('http://localhost:5000/api/idioms', newIdiom);
+    console.log(response.status);
+
     setIdioms([
-      {...newIdiom, id: "", likes: [], approved: false},
+      {...newIdiom, _id: "", likes: [], approved: false},
       ...idioms
     ]);
   }
@@ -29,7 +44,7 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
 
   const toggleLikeIdiom = (idiomId: string) => {
     setIdioms(idioms.map(idiom => {
-      if (idiom.id === idiomId) {
+      if (idiom._id === idiomId) {
         const currentUserId = getCurrentUserId();
         const likedByCurrentUser = idiom.likes.filter(userId => userId === currentUserId).length !== 0;
         const otherLikes = idiom.likes.filter(userId => userId !== currentUserId);
@@ -44,7 +59,7 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
 
   const toggleApproveIdiom = (idiomId: string) => {
     setIdioms(idioms.map(idiom => {
-      if (idiom.id === idiomId)
+      if (idiom._id === idiomId)
         return {...idiom, approved: !idiom.approved};
       return idiom;
     }));
@@ -60,7 +75,7 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
                           toggleLikeFn={toggleLikeIdiom}
                           toggleApproveFn={toggleApproveIdiom}
                           updateIdiomFn={updateIdiom}
-                          key={idiom.id}
+                          key={idiom._id}
           />
         </div>
       )}
