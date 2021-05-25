@@ -24,6 +24,7 @@ export interface IIdiomProps {
 
 export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const toggleLikeFn = () => {
     props.toggleLikeFn(props.idiom._id);
@@ -50,16 +51,24 @@ export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
     setEditMode(false);
   }
 
-  const updateIdiom = (updatedIdiom: IIdiom) => {
-    props.updateIdiomFn(props.idiom._id, updatedIdiom);
+  const updateIdiom = async (updatedIdiom: IIdiom) => {
+    setLoading(true);
     setEditMode(false);
+    await props.updateIdiomFn(props.idiom._id, updatedIdiom);
+    setLoading(false);
   }
 
   return (
     <div className="card m-2">
         <div className="card-body">
           {!editMode && <>
-            <h5 onInput={(e) => console.log()} contentEditable={editMode} className="card-title">{props.idiom.idiom}</h5>
+              <div className="row">
+                  <div className="col">
+                    <h5 className="card-title">{props.idiom.idiom}</h5>
+                  </div>
+                  <div className="spinner-border col-auto me-3" role="status" hidden={!loading}>
+                  </div>
+              </div>
             <p className="card-text">{props.idiom.definition}</p>
             <blockquote className="blockquote">
               <p>{props.idiom.quote}</p>

@@ -3,34 +3,41 @@ import { IdiomComponent, IIdiom } from "./idiom.component";
 import { getCurrentUserId } from "../../fake-user";
 import {AddIdiomComponent} from "./add-idiom.component";
 import {IUpdateIdiom} from "./edit-idiom.component";
-import axios, {AxiosResponse} from "axios";
-import {useAuth} from "../../hooks/useAuth";
+import axios from "axios";
 import {UserContext} from "../../context/user.context";
+import {useProtectedRoute} from "../../hooks/useProtectedRoute";
 
 class IListOfIdiomsProps {}
 
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>([]);
-  const {config} = useContext(UserContext);
+  const {config, authenticated} = useContext(UserContext);
+  const {get, patch} = useProtectedRoute();
 
   useEffect(() => {
     const fetchIdioms = async () => {
-      const response: AxiosResponse<IIdiom[]> = await axios.get("http://localhost:5000/api/idioms", config);
-      const idioms = response.data;
-      setIdioms(idioms);
+      //const response: AxiosResponse<IIdiom[]> = await axios.get("http://localhost:5000/api/idioms", config);
+      //const idioms = response.data;
+
+      const data = await get<IIdiom[]>("http://localhost:5000/api/idioms")
+      //console.log(data);
+      setIdioms(data);
     }
     fetchIdioms();
   }, [config]);
 
 
-  const updateIdiom = async (idiomId: string, updatedIdiom: IUpdateIdiom) => {
-    const response = await axios.patch(`http://localhost:5000/api/idioms/${idiomId}`, updatedIdiom);;
+  const updateIdiom = (idiomId: string, updatedIdiom: IUpdateIdiom) => {
+    return new Promise(async(resolve) => {
+      await patch(`http://localhost:5000/api/idioms/${idiomId}`, updatedIdiom);
+      setIdioms(idioms.map(idiom => {
+        if (idiom._id === idiomId)
+          return {...idiom, ...updatedIdiom};
+        return idiom;
+      }));
+      resolve("");
 
-    setIdioms(idioms.map(idiom => {
-      if (idiom._id === idiomId)
-        return {...idiom, ...updatedIdiom};
-      return idiom;
-    }));
+    });
   }
 
   const addIdiom = async (newIdiom: IUpdateIdiom) => {

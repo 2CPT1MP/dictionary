@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {EditIdiomComponent, IUpdateIdiom} from "./edit-idiom.component";
 import {IIdiom} from "./idiom.component";
+import {UserContext} from "../../context/user.context";
 
 interface IAddIdiomProps {
   addIdiomFn(newIdiom: IUpdateIdiom): void;
@@ -8,6 +9,7 @@ interface IAddIdiomProps {
 
 export const AddIdiomComponent: React.FC<IAddIdiomProps> = ({addIdiomFn}) => {
   const [createMode, setCreateMode] = useState<boolean>(false);
+  const {authenticated} = useContext(UserContext);
 
   const resetHandler = () => {
     setCreateMode(false);
@@ -23,7 +25,7 @@ export const AddIdiomComponent: React.FC<IAddIdiomProps> = ({addIdiomFn}) => {
   }
 
   const addIdiomHandler = () => {
-    setCreateMode(true);
+    setCreateMode(!createMode);
   }
 
   const addIcon = (
@@ -32,6 +34,9 @@ export const AddIdiomComponent: React.FC<IAddIdiomProps> = ({addIdiomFn}) => {
       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
     </svg>
   );
+
+  if (!authenticated)
+    return <></>
 
   return (
     <>
