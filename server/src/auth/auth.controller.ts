@@ -3,6 +3,10 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RegisterGuard, RegisterUserRequest } from './guards/register.guard';
+import { Roles } from '../role/roles.decorator';
+import { Role } from '../role/role.enum';
+import { RoleGuard } from '../role/role.guard';
+import { Auth } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,9 +26,10 @@ export class AuthController {
     return this.authService.register({ username, password });
   }*/
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get('profile')
-  getProfile() {
-    return 'SUCCESS';
+  getProfile(@Request() request) {
+    //console.log(request.user);
   }
 }
