@@ -1,24 +1,26 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { IdiomComponent, IIdiom } from "./idiom.component";
 import { getCurrentUserId } from "../../fake-user";
 import {AddIdiomComponent} from "./add-idiom.component";
 import {IUpdateIdiom} from "./edit-idiom.component";
 import axios, {AxiosResponse} from "axios";
+import {useAuth} from "../../hooks/useAuth";
+import {UserContext} from "../../context/user.context";
 
 class IListOfIdiomsProps {}
 
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>([]);
+  const {config} = useContext(UserContext);
 
   useEffect(() => {
     const fetchIdioms = async () => {
-      const response: AxiosResponse<IIdiom[]> = await axios.get("http://localhost:5000/api/idioms");
+      const response: AxiosResponse<IIdiom[]> = await axios.get("http://localhost:5000/api/idioms", config);
       const idioms = response.data;
-      console.log(idioms);
       setIdioms(idioms);
     }
     fetchIdioms();
-  }, []);
+  }, [config]);
 
 
   const updateIdiom = async (idiomId: string, updatedIdiom: IUpdateIdiom) => {

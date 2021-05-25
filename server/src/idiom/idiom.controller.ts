@@ -1,7 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { IdiomService } from './idiom.service';
 import { AddIdiomDto, UpdateIdiomDto } from './idiom.dto';
+import { Auth } from '../auth/guards/auth.guard';
+import {Role} from "../role/role.enum";
 
+@Auth()
 @Controller('api/idioms')
 export class IdiomController {
   constructor(private readonly idiomService: IdiomService) {}
@@ -21,6 +24,7 @@ export class IdiomController {
     return await this.idiomService.addIdiom(idiomBody);
   }
 
+  @Auth(Role.Admin)
   @Patch(':idiomId')
   async updateIdiom(
     @Param('idiomId') idiomId: string,
@@ -29,6 +33,7 @@ export class IdiomController {
     return await this.idiomService.updateIdiom(idiomId, idiomBody);
   }
 
+  @Auth(Role.Admin)
   @Post(':idiomId/approve')
   async approveIdiom(@Param('idiomId') idiomId: string) {
     return await this.idiomService.approveIdiom(idiomId);

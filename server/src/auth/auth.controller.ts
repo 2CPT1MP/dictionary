@@ -1,12 +1,6 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RegisterGuard, RegisterUserRequest } from './guards/register.guard';
-import { Roles } from '../role/roles.decorator';
-import { Role } from '../role/role.enum';
-import { RoleGuard } from '../role/role.guard';
-import { Auth } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,11 +19,4 @@ export class AuthController {
     const { username, password } = request.body;
     return this.authService.register({ username, password });
   }*/
-
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('profile')
-  getProfile(@Request() request) {
-    //console.log(request.user);
-  }
 }
