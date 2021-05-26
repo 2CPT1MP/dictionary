@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {LikeButtonComponent} from "./button/like-button.component";
 import {ApproveButtonComponent} from "./button/approve-button.component";
 import {getCurrentUserId} from "../../fake-user";
 import {EditButtonComponent} from "./button/edit-button.component";
 import {EditIdiomComponent} from "./edit-idiom.component";
+import {UserContext} from "../../context/user.context";
 
 export interface IIdiom {
   _id: string;
@@ -25,6 +26,7 @@ export interface IIdiomProps {
 export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const {user} = useContext(UserContext);
 
   const toggleLikeFn = () => {
     props.toggleLikeFn(props.idiom._id);
@@ -39,7 +41,7 @@ export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
   }
 
   const isLikedByCurrentUser = () => {
-    const currentUserId = getCurrentUserId();
+    const currentUserId = user.userId;
     return props.idiom.likes.filter((userId) => userId === currentUserId).length > 0;
   }
 

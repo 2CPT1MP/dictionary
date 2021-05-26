@@ -32,16 +32,21 @@ export class IdiomService {
     );
   }
 
-  async approveIdiom(idiomId: string) {
-    return this.idiomModel.updateOne({ _id: idiomId }, { approved: true });
+  async approveIdiom(idiomId: string, approve: boolean) {
+    return this.idiomModel.updateOne({ _id: idiomId }, { approved: approve });
   }
 
-  async likeIdiom(idiomId: string) {
-    //const targetIdiom = await this.getIdiomById(idiomId);
-    //const likeCount = targetIdiom.likes;
+  async likeIdiom(idiomId: string, userId: string, like: boolean) {
+    if (like) {
+      return this.idiomModel.updateOne(
+        { _id: idiomId },
+        { $addToSet: { likes: userId } },
+      );
+    }
+
     return this.idiomModel.updateOne(
       { _id: idiomId },
-      { $push: { likes: '2CPT1MP' } },
+      { $pullAll: { likes: [userId] } },
     );
   }
 }

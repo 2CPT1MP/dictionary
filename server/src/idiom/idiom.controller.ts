@@ -1,8 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { IdiomService } from './idiom.service';
-import { AddIdiomDto, UpdateIdiomDto } from './idiom.dto';
+import {
+  AddIdiomDto,
+  ApproveIdiomDto,
+  LikeIdiomDto,
+  UpdateIdiomDto,
+} from './idiom.dto';
 import { Auth } from '../auth/guards/auth.guard';
-import {Role} from "../role/role.enum";
+import { Role } from '../role/role.enum';
 
 @Auth()
 @Controller('api/idioms')
@@ -35,12 +40,23 @@ export class IdiomController {
 
   @Auth(Role.Admin)
   @Post(':idiomId/approve')
-  async approveIdiom(@Param('idiomId') idiomId: string) {
-    return await this.idiomService.approveIdiom(idiomId);
+  async approveIdiom(
+    @Param('idiomId') idiomId: string,
+    @Body() body: ApproveIdiomDto,
+  ) {
+    return await this.idiomService.approveIdiom(idiomId, body.approve);
   }
 
   @Post(':idiomId/like')
-  async likeIdiom(@Param('idiomId') idiomId: string) {
-    return await this.idiomService.likeIdiom(idiomId);
+  async likeIdiom(
+    @Req() request,
+    @Param('idiomId') idiomId: string,
+    @Body() body: LikeIdiomDto,
+  ) {
+    return await this.idiomService.likeIdiom(
+      idiomId,
+      request.user.userId,
+      body.like,
+    );
   }
 }

@@ -3,7 +3,7 @@ import {useLocalStorage} from "./useLocalStorage";
 
 export const useAuth = () => {
   const [token, setToken] = useLocalStorage<string>('access_token', "");
-  const [config, setConfig] = useState({
+  const [headerConfig, setConfig] = useState({
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -18,7 +18,7 @@ export const useAuth = () => {
   }, [token]);
 
   return {
-    config,
+    headerConfig,
     setToken
   }
 }

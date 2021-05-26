@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {IIdiom} from "./idiom.component";
 
 export interface IUpdateIdiom {
   idiom: string;

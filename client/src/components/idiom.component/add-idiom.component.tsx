@@ -1,6 +1,5 @@
 import React, {useContext, useState} from "react";
 import {EditIdiomComponent, IUpdateIdiom} from "./edit-idiom.component";
-import {IIdiom} from "./idiom.component";
 import {UserContext} from "../../context/user.context";
 
 interface IAddIdiomProps {
