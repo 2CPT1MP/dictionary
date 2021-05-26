@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {HeaderConfig, useAuth} from "../hooks/useAuth";
 import {Roles} from "../components/login.component";
+import {useLocalStorage} from "../hooks/useLocalStorage";
 
 interface IUserProviderProps {
   children: JSX.Element
@@ -43,8 +44,8 @@ export const UserProvider: React.FC<IUserProviderProps> = ({children}) => {
   const {headerConfig, setToken} = useAuth();
   const [authenticated, setAuthenticated] = useState<boolean>(false);
 
-  const [userId, setUserId] = useState<string>("");
-  const [roles, setRoles] = useState<Roles[]>([]);
+  const [userId, setUserId] = useLocalStorage<string>('user-id', "");
+  const [roles, setRoles] = useLocalStorage<Roles[]>('user-roles', []);
 
   return (
     <UserContext.Provider value={{

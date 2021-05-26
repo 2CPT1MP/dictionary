@@ -7,9 +7,7 @@ export const useProtectedRoute = () => {
 
   const get = <T>(url: string) => {
     return new Promise<T>((async (resolve, reject) => {
-      console.log("CONFIG:", headerConfig);
       try {
-
         if (headerConfig) {
           const response = await axios.get<T>(url, headerConfig);
           setAuthenticated(true);

@@ -17,7 +17,7 @@ type UserResponseData = {
 }
 
 export const LoginComponent: React.FC<ILoginProps> = () => {
-  const {setToken, authenticated} = useContext(UserContext);
+  const {user, setToken, authenticated} = useContext(UserContext);
   const [error, setError] = useState<string>("");
 
   const [loginData, setLoginData] = useState({
@@ -30,9 +30,10 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
       event.preventDefault();
       try {
         const response: AxiosResponse<UserResponseData> = await axios.post('http://localhost:5000/auth/login', loginData);
+        console.log(response.data);
         setToken(response.data.access_token);
-        //user.setUserId(response.data.userId);
-        //user.roles.setRoles([...response.data.roles]);
+        user.setUserId(response.data.userId);
+        user.roles.setRoles([...response.data.roles]);
         resolve(true);
       } catch (e) {
         setError("Неверный логин или пароль");
@@ -64,7 +65,7 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
       <form onSubmit={onSubmit}>
         <Modal.Header>
           <div className={"w-100 d-flex justify-content-center"}>
-            <h3 className={""}>Авторизация</h3>
+            <h3>Авторизация</h3>
           </div>
         </Modal.Header>
         <Modal.Body>

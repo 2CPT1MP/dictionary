@@ -13,7 +13,6 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const {get, patch, post} = useProtectedRoute();
 
   useEffect(() => {
-      console.log("EFFECT", headerConfig);
       const fetchIdioms = async () => {
         const data = await get<IIdiom[]>("http://localhost:5000/api/idioms")
         setIdioms(data);
@@ -50,7 +49,6 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
     return new Promise(async(resolve) => {
       let liked: boolean = false;
       const currentUserId = user.userId;
-      console.log(user.userId)
       idioms.forEach((idiom) => {
         if (idiom._id === idiomId)
           liked = idiom.likes.filter(userId => userId === currentUserId).length !== 0;
