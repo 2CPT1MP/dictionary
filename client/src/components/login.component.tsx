@@ -1,6 +1,7 @@
 import React, {useContext, useState} from "react";
 import axios, {AxiosResponse} from "axios";
 import {UserContext} from "../context/user.context";
+import {Modal} from "react-bootstrap";
 
 interface ILoginProps {}
 
@@ -55,29 +56,52 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
   if (authenticated)
     return <></>;
 
+
   return (
-    <div className={"row justify-content-center mt-5"}>
-      <div className="col-auto">
-        <form onSubmit={onSubmit}>
-          <h3 className={"text-center mb-3"}>Авторизация</h3>
-          <div className="alert alert-danger col" role="alert" hidden={error === ""}>
-            {error}
+    <Modal show={true} size={"sm"}>
+      <form onSubmit={onSubmit}>
+        <Modal.Header>
+          <div className={"w-100 d-flex justify-content-center"}>
+            <h3 className={""}>Авторизация</h3>
           </div>
-          <div className="mb-3">
-            <label htmlFor="username" className="form-label">Логин</label>
-            <input type="text" className="form-control no-border" id="username" name={"username"} value={loginData.username} onChange={onChange} required/>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">Пароль</label>
-            <input type="password" className="form-control" id="password" name={"password"} value={loginData.password} onChange={onChange} required/>
-          </div>
-          <div className="row justify-content-center">
-            <div className="col-auto">
-              <button className={"btn shadow-none btn-dark"} type={"submit"}>{signInButton} Войти</button>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="col-auto">
+            <div className="alert alert-danger col" role="alert" hidden={error === ""}>
+              {error}
+            </div>
+            <div className="mb-3">
+              <div className="row align-items-center">
+                <div className="col-3">
+                  <label htmlFor="username" className="form-label mb-0">Логин</label>
+                </div>
+                <div className="col">
+                  <input type="text" className="form-control no-border" id="username" name={"username"}
+                         value={loginData.username} onChange={onChange} required/>
+                </div>
+              </div>
+
+
+            </div>
+            <div className="mb-3">
+              <div className="row align-items-center">
+                <div className="col-3">
+              <label htmlFor="password" className="form-label">Пароль</label>
+                </div>
+                <div className="col">
+              <input type="password" className="form-control" id="password" name={"password"}
+                     value={loginData.password} onChange={onChange} required/>
+                </div>
+              </div>
             </div>
           </div>
-        </form>
-      </div>
-    </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className={"w-100 d-flex justify-content-center"}>
+            <button className={"btn shadow-none btn-dark"} type={"submit"}>{signInButton} Войти</button>
+          </div>
+        </Modal.Footer>
+      </form>
+    </Modal>
   );
 };
