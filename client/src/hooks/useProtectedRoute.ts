@@ -6,14 +6,20 @@ export const useProtectedRoute = () => {
   const {headerConfig, setToken, setAuthenticated} = useContext(UserContext)
 
   const get = <T>(url: string) => {
-    return new Promise<T>((async (resolve) => {
+    return new Promise<T>((async (resolve, reject) => {
+      console.log("CONFIG:", headerConfig);
       try {
-        const response = await axios.get<T>(url, headerConfig);
-        setAuthenticated(true);
-        resolve(response.data);
+
+        if (headerConfig) {
+          const response = await axios.get<T>(url, headerConfig);
+          setAuthenticated(true);
+          resolve(response.data);
+        }
       } catch (error) {
-        if (error.response.status && error.response.status === 401)
+        if (error.response.status && error.response.status === 401) {
+          setToken("");
           setAuthenticated(false);
+        }
       }
     }));
   }
@@ -21,9 +27,11 @@ export const useProtectedRoute = () => {
   const post = <T>(url: string, data?: any) => {
     return new Promise<T>((async (resolve) => {
       try {
-        const response = await axios.post<T>(url, data, headerConfig);
-        setAuthenticated(true);
-        resolve(response.data);
+        if (headerConfig) {
+          const response = await axios.post<T>(url, data, headerConfig);
+          setAuthenticated(true);
+          resolve(response.data);
+        }
       } catch (error) {
         if (error.response.status && error.response.status === 401)
           setAuthenticated(false);
@@ -34,9 +42,11 @@ export const useProtectedRoute = () => {
   const patch = <T>(url: string, data?: any) => {
     return new Promise<T>((async (resolve) => {
       try {
-        const response = await axios.patch<T>(url, data, headerConfig);
-        setAuthenticated(true);
-        resolve(response.data);
+        if (headerConfig) {
+          const response = await axios.patch<T>(url, data, headerConfig);
+          setAuthenticated(true);
+          resolve(response.data);
+        }
       } catch (error) {
         if (error.response.status && error.response.status === 401)
           setAuthenticated(false);

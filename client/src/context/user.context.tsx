@@ -1,8 +1,6 @@
 import React, {useState} from "react";
-import {useAuth} from "../hooks/useAuth";
+import {HeaderConfig, useAuth} from "../hooks/useAuth";
 import {Roles} from "../components/login.component";
-import {useLocalStorage} from "../hooks/useLocalStorage";
-
 
 interface IUserProviderProps {
   children: JSX.Element
@@ -10,8 +8,8 @@ interface IUserProviderProps {
 
 type UserContextProvider = {
   user: UserData,
-  headerConfig: {headers: {Authorization: string}},
-  setToken: React.Dispatch<React.SetStateAction<string>>,
+  headerConfig: HeaderConfig | null,
+  setToken: React.Dispatch<React.SetStateAction<string | null>>,
   authenticated: boolean,
   setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>,
 }
@@ -25,7 +23,7 @@ export const UserContext = React.createContext<UserContextProvider>({
       setRoles: () => {}
     }
   },
-  headerConfig: {headers: {Authorization: ""}},
+  headerConfig: null,
   setToken: () => {},
   authenticated: false,
   setAuthenticated: () => {}
@@ -43,10 +41,10 @@ type UserData = {
 
 export const UserProvider: React.FC<IUserProviderProps> = ({children}) => {
   const {headerConfig, setToken} = useAuth();
-  const [authenticated, setAuthenticated] = useState<boolean>(true);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
 
-  const [userId, setUserId] = useLocalStorage<string>('user-id', "");
-  const [roles, setRoles] = useLocalStorage<Roles[]>('user-roles', []);
+  const [userId, setUserId] = useState<string>("");
+  const [roles, setRoles] = useState<Roles[]>([]);
 
   return (
     <UserContext.Provider value={{

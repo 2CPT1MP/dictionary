@@ -10,10 +10,8 @@ export const useLocalStorage = <T>(key: string, defaultValue: T): [T, React.Disp
 
   useEffect(() => {
     const item = localStorage.getItem(key);
-    console.log(item);
-    if (item) setState(JSON.parse(item));
+    if (item !== null) setState(JSON.parse(item));
   }, []);
-
 
   return [state, setState];
 }

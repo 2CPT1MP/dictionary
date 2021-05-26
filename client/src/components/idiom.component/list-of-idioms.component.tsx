@@ -13,11 +13,12 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const {get, patch, post} = useProtectedRoute();
 
   useEffect(() => {
-    const fetchIdioms = async () => {
-      const data = await get<IIdiom[]>("http://localhost:5000/api/idioms")
-      setIdioms(data);
-    }
-    fetchIdioms();
+      console.log("EFFECT", headerConfig);
+      const fetchIdioms = async () => {
+        const data = await get<IIdiom[]>("http://localhost:5000/api/idioms")
+        setIdioms(data);
+      }
+      fetchIdioms();
   }, [headerConfig]);
 
 

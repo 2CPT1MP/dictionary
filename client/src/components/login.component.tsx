@@ -17,7 +17,7 @@ type UserResponseData = {
 }
 
 export const LoginComponent: React.FC<ILoginProps> = () => {
-  const {setToken, authenticated, user} = useContext(UserContext);
+  const {setToken, authenticated} = useContext(UserContext);
   const [error, setError] = useState<string>("");
 
   const [loginData, setLoginData] = useState({
@@ -25,19 +25,22 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
     password: ""
   });
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = async(event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      const response: AxiosResponse<UserResponseData> = await axios.post('http://localhost:5000/auth/login', loginData);
-      console.log(response);
-      setToken(response.data.access_token);
-      user.setUserId(response.data.userId);
-      user.roles.setRoles([...response.data.roles]);
-    } catch (e) {
-      setError("Неверный логин или пароль");
-    }
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event: React.FormEvent<HTMLFormElement>) => {
+    return new Promise(async(resolve) => {
+      event.preventDefault();
+      try {
+        const response: AxiosResponse<UserResponseData> = await axios.post('http://localhost:5000/auth/login', loginData);
+        setToken(response.data.access_token);
+        //user.setUserId(response.data.userId);
+        //user.roles.setRoles([...response.data.roles]);
+        resolve(true);
+      } catch (e) {
+        setError("Неверный логин или пароль");
+      }
+    });
+  };
 
-  }
+
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({
@@ -55,7 +58,6 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
 
   if (authenticated)
     return <></>;
-
 
   return (
     <Modal show={true} size={"sm"}>
@@ -80,8 +82,6 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
                          value={loginData.username} onChange={onChange} required/>
                 </div>
               </div>
-
-
             </div>
             <div className="mb-3">
               <div className="row align-items-center">
@@ -89,7 +89,7 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
               <label htmlFor="password" className="form-label">Пароль</label>
                 </div>
                 <div className="col">
-              <input type="password" className="form-control" id="password" name={"password"}
+                  <input type="password" className="form-control" id="password" name={"password"}
                      value={loginData.password} onChange={onChange} required/>
                 </div>
               </div>

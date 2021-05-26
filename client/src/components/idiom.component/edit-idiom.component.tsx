@@ -56,7 +56,7 @@ export const EditIdiomComponent: React.FC<IEditIdiomProps> = ({idiom, resetHandl
 
   return (
     <form onSubmit={onSubmit} onReset={onReset}>
-      <h5 className={"text-center"}>{title}</h5>
+      <h5>{title}</h5>
       <div className="mb-3 mt-3">
         <div className="row align-items-start">
           <div className="col-sm-12 col-md-4">
