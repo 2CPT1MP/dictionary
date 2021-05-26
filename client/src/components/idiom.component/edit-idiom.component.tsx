@@ -15,7 +15,7 @@ interface IEditIdiomProps {
   submitHandler(updatedIdiom: IUpdateIdiom): void;
 }
 
-export const EditIdiomComponent: React.FC<IEditIdiomProps> = ({idiom, resetHandler, submitHandler, title="Редактирование"}) => {
+export const EditIdiomComponent: React.FC<IEditIdiomProps> = ({idiom, resetHandler, submitHandler, title="Изменить фразеологизм"}) => {
   const [formData, setFormData] = useState({
     idiom: idiom.idiom,
     definition: idiom.definition,

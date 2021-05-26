@@ -44,7 +44,7 @@ export const AddIdiomComponent: React.FC<IAddIdiomProps> = ({addIdiomFn}) => {
         <div className="card m-2 ">
           <div className="card-body">
           <EditIdiomComponent  idiom={emptyIdiom}
-                               title={"Добавление"}
+                               title={"Добавить фразеологизм"}
                                resetHandler={resetHandler}
                                submitHandler={submitHandler}
           />
