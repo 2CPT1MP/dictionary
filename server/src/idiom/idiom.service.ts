@@ -10,10 +10,27 @@ export class IdiomService {
     @InjectModel(Idiom.name) private readonly idiomModel: Model<IdiomDocument>,
   ) {}
 
-  async getAllIdioms(approved?: boolean): Promise<Idiom[]> {
+  async getAllIdioms(filter: string, approved?: boolean): Promise<Idiom[]> {
     if (approved === undefined)
-      return this.idiomModel.find({}).sort({ timestamp: -1 });
-    return this.idiomModel.find({ approved: approved }).sort({ timestamp: -1 });
+      return this.idiomModel
+        .find({
+          $or: [
+            { idiom: { $regex: new RegExp(filter, 'i') } },
+            { definition: { $regex: new RegExp(filter, 'i') } },
+          ],
+        })
+        .sort({ timestamp: -1 })
+        .limit(250);
+    return this.idiomModel
+      .find({
+        approved: approved,
+        $or: [
+          { idiom: new RegExp(filter, 'i') },
+          { definition: new RegExp(filter, 'i') },
+        ],
+      })
+      .sort({ timestamp: -1 })
+      .limit(250);
   }
 
   async getIdiomById(id: string): Promise<Idiom> {

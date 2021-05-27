@@ -4,22 +4,26 @@ import {AddIdiomComponent} from "./add-idiom.component";
 import {IUpdateIdiom} from "./edit-idiom.component";
 import {UserContext} from "../../context/user.context";
 import {useProtectedRoute} from "../../hooks/useProtectedRoute";
+import {SearchComponent} from "./search.component";
 
 class IListOfIdiomsProps {}
 
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>([]);
+  const [filterData, setFilterData] = useState<string>("");
   const [approved, setApproved] = useState<boolean>(true);
   const {headerConfig, user, authenticated} = useContext(UserContext);
   const {get, patch, post} = useProtectedRoute();
 
   useEffect(() => {
+      const filterQuery = filterData? `&q=${filterData}` : ``;
+
       const fetchIdioms = async () => {
-        const data = await get<IIdiom[]>(`http://localhost:5000/api/idioms?approved=${approved}`)
+        const data = await get<IIdiom[]>(`http://localhost:5000/api/idioms?approved=${approved}${filterQuery}`)
         setIdioms(data);
       }
       fetchIdioms();
-  }, [headerConfig, approved]);
+  }, [headerConfig, approved, filterData]);
 
   const onApprovedChange: React.ChangeEventHandler<HTMLInputElement> = () => {
     setApproved(!approved);
@@ -103,11 +107,14 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
         <AddIdiomComponent addIdiomFn={addIdiom}/>
       </div>
     </div>
-      {authenticated && <div className="row justify-content-end">
-        <div className="col-auto me-2 mt-3">
+      {authenticated && <div className="row justify-content-end mt-5 ms-0 mb-3">
+          <div className="col-sm-12 col-md">
+              <SearchComponent setFilter={setFilterData} filter={filterData}/>
+          </div>
+        <div className="col-sm-12 col-md d-flex align-items-center">
           <div className="form-check form-switch">
             <input className="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckChecked" checked={approved} onChange={onApprovedChange}/>
-            <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Только {approved? "" : "не"}проверенные</label>
+            <label className="form-check-label " htmlFor="flexSwitchCheckChecked">Только {approved? "" : "не"}проверенные</label>
           </div>
         </div>
     </div>}

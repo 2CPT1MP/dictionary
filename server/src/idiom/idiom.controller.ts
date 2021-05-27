@@ -17,6 +17,7 @@ import {
 } from './idiom.dto';
 import { Auth } from '../auth/guards/auth.guard';
 import { Role } from '../role/role.enum';
+import {query} from "express";
 
 @Auth()
 @Controller('api/idioms')
@@ -24,9 +25,13 @@ export class IdiomController {
   constructor(private readonly idiomService: IdiomService) {}
 
   @Get()
-  async getIdioms(@Query('approved') approved?: boolean) {
-    if (approved === undefined) return await this.idiomService.getAllIdioms();
-    return await this.idiomService.getAllIdioms(approved);
+  async getIdioms(
+    @Query('q') filter: string,
+    @Query('approved') approved?: boolean,
+  ) {
+    if (approved === undefined)
+      return await this.idiomService.getAllIdioms(filter);
+    return await this.idiomService.getAllIdioms(filter, approved);
   }
 
   @Get(':idiomId')
