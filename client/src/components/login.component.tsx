@@ -2,6 +2,7 @@ import React, {useContext, useState} from "react";
 import axios, {AxiosResponse} from "axios";
 import {UserContext} from "../context/user.context";
 import {Modal} from "react-bootstrap";
+import {CheckCircle, PersonPlus, BoxArrowInLeft, Key, PersonLinesFill} from 'react-bootstrap-icons';
 
 interface ILoginProps {}
 
@@ -19,6 +20,8 @@ type UserResponseData = {
 export const LoginComponent: React.FC<ILoginProps> = () => {
   const {user, setToken, authenticated, setAuthenticated} = useContext(UserContext);
   const [error, setError] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [registerMode, setRegisterMode] = useState<boolean>(false);
 
   const [loginData, setLoginData] = useState({
     username: "",
@@ -28,18 +31,38 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (event: React.FormEvent<HTMLFormElement>) => {
     return new Promise(async(resolve) => {
       event.preventDefault();
+      registerMode? await register() : await login();
+    });
+  };
+
+  const login = async() => {
+    return new Promise(async(resolve) => {
       try {
         const response: AxiosResponse<UserResponseData> = await axios.post('http://localhost:5000/auth/login', loginData);
-        console.log(response.data);
         setToken(response.data.access_token);
         user.setUserId(response.data.userId);
         user.roles.setRoles([...response.data.roles]);
         resolve(true);
       } catch (e) {
+        setMessage("");
         setError("Неверный логин или пароль");
       }
     });
-  };
+  }
+
+  const register = () => {
+    return new Promise(async(resolve) => {
+      try {
+        const response: AxiosResponse<UserResponseData> = await axios.post('http://localhost:5000/auth/register', loginData);
+        setError("");
+        setMessage("Успешная регистрация")
+        resolve(true);
+      } catch (e) {
+        setMessage("");
+        setError("Ошибка при регистрации");
+      }
+    });
+  }
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({
@@ -55,12 +78,9 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
     setAuthenticated(false);
   }
 
-  const signInButton = (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
-      <path fillRule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
-      <path fillRule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
-    </svg>
-  );
+  const onChangeMode = () => {
+    setRegisterMode(!registerMode);
+  }
 
   if (authenticated)
     return (
@@ -76,18 +96,21 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
       <form onSubmit={onSubmit}>
         <Modal.Header>
           <div className={"w-100 d-flex justify-content-center"}>
-            <h3>Авторизация</h3>
+            <h3>{registerMode? "Регистрация" : "Авторизация"}</h3>
           </div>
         </Modal.Header>
         <Modal.Body>
           <div className="col-auto">
+            <div className="alert alert-info col" role="alert" hidden={message === ""}>
+              {message}
+            </div>
             <div className="alert alert-danger col" role="alert" hidden={error === ""}>
               {error}
             </div>
             <div className="mb-3">
               <div className="row align-items-center">
-                <div className="col-3">
-                  <label htmlFor="username" className="form-label mb-0">Логин</label>
+                <div className="col-5">
+                  <label htmlFor="username" className="form-label mb-0"><PersonLinesFill /> Логин</label>
                 </div>
                 <div className="col">
                   <input type="text" className="form-control no-border" id="username" name={"username"}
@@ -97,8 +120,8 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
             </div>
             <div className="mb-3">
               <div className="row align-items-center">
-                <div className="col-3">
-              <label htmlFor="password" className="form-label">Пароль</label>
+                <div className="col-5">
+              <label htmlFor="password" className="form-label"><Key /> Пароль</label>
                 </div>
                 <div className="col">
                   <input type="password" className="form-control" id="password" name={"password"}
@@ -109,9 +132,18 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <div className={"w-100 d-flex justify-content-center"}>
-            <button className={"btn shadow-none btn-dark"} type={"submit"}>{signInButton} Войти</button>
-          </div>
+          {!registerMode && <>
+            <button type="button"
+                    className={"btn shadow-none btn-outline-dark"}
+                    onClick={onChangeMode}><PersonPlus /> Регистрация</button>
+            <button className={"btn shadow-none btn-dark"} type={"submit"}><BoxArrowInLeft /> Войти</button>
+          </>}
+          {registerMode && <>
+              <button type="button"
+                      className={"btn shadow-none btn-outline-dark"}
+                      onClick={onChangeMode}><BoxArrowInLeft /> Вход</button>
+              <button className={"btn shadow-none btn-dark"} type={"submit"}><CheckCircle /> Подтвердить</button>
+          </>}
         </Modal.Footer>
       </form>
     </Modal>
