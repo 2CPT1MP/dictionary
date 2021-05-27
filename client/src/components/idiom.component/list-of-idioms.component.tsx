@@ -35,9 +35,15 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
 
   const addIdiom = async (newIdiom: IUpdateIdiom) => {
     return new Promise(async(resolve) => {
-      await post('http://localhost:5000/api/idioms', newIdiom);
+      const response = await post<IIdiom>('http://localhost:5000/api/idioms', newIdiom);
+
       setIdioms([
-        {...newIdiom, _id: "", likes: [], approved: false},
+        {
+          ...newIdiom,
+          _id: response._id,
+          likes: [...response.likes],
+          approved: response.approved
+        },
         ...idioms
       ]);
       resolve(true)

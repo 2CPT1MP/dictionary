@@ -9,7 +9,7 @@ export type UnregisteredUser = {
   password: string;
 };
 
-export type JwtPayload = { sub: number; username: string; roles: Role[] };
+export type JwtPayload = { sub: string; username: string; roles: Role[] };
 
 @Injectable()
 export class AuthService {
@@ -22,19 +22,21 @@ export class AuthService {
     const user = await this.userService.findOne(username);
 
     if (user && (await compare(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
+      return {
+        userId: user._id,
+        roles: user.roles,
+      };
     }
     return null;
   }
 
-  async login(user: User) {
+  login(user: User) {
     const payload: JwtPayload = {
       sub: user.userId,
       username: user.username,
       roles: user.roles,
     };
-
+    //console.log(user);
     return {
       access_token: this.jwtService.sign(payload),
       userId: user.userId,

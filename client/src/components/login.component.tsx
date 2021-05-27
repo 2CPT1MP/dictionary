@@ -17,7 +17,7 @@ type UserResponseData = {
 }
 
 export const LoginComponent: React.FC<ILoginProps> = () => {
-  const {user, setToken, authenticated} = useContext(UserContext);
+  const {user, setToken, authenticated, setAuthenticated} = useContext(UserContext);
   const [error, setError] = useState<string>("");
 
   const [loginData, setLoginData] = useState({
@@ -41,13 +41,18 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
     });
   };
 
-
-
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({
       ...loginData,
       [event.target.name]: event.target.value
     });
+  }
+
+  const onSignOut: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    setToken("");
+    user.roles.setRoles([]);
+    user.setUserId("");
+    setAuthenticated(false);
   }
 
   const signInButton = (
@@ -58,7 +63,13 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
   );
 
   if (authenticated)
-    return <></>;
+    return (
+      <div className={"row justify-content-end mt-3"}>
+        <div className="col-auto" onClick={onSignOut}>
+          <button className={"btn btn-outline-dark"}>Выйти</button>
+        </div>
+      </div>
+    );
 
   return (
     <Modal show={true} size={"sm"}>

@@ -1,10 +1,13 @@
+import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { UnregisteredUser } from '../auth/auth.service';
-import { v4 as generateId } from 'uuid';
 import { Role } from '../role/role.enum';
 
+import { UserClass, UserDocument } from './user.schema';
+
 export type User = {
-  userId: number;
+  userId: string;
   username: string;
   password: string;
   roles: Role[];
@@ -12,27 +15,20 @@ export type User = {
 
 @Injectable()
 export class UserService {
-  private readonly users: User[] = [
-    {
-      userId: 1,
-      username: 'admin',
-      password: '$2b$10$LAAV1GC3dt9Tj0ycQNoWy.l/Wov6uBTtrEsJlPNj56dJ.dTQ6HGTm', //admin
-      roles: [Role.Admin],
-    },
-    {
-      userId: 2,
-      username: 'Maria',
-      password: '$2b$10$O/LrC27lqnRqC5gimwuzw.AuQtjw83vl4zvqCTwxK8zeefosFltgO', //password
-      roles: [Role.User],
-    },
-  ];
+  constructor(
+    @InjectModel(UserClass.name)
+    private readonly userModel: Model<UserDocument>,
+  ) {}
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  findOne(username: string) {
+    return new Promise<UserClass>(async (resolve) => {
+      const user = await this.userModel.findOne({ username });
+      resolve(user);
+    });
   }
 
   async insert(user: UnregisteredUser): Promise<void> {
-    const newUser = { ...user, userId: generateId(), roles: [] };
-    this.users.push(newUser);
+    const newUser = new this.userModel(user);
+    await newUser.save();
   }
 }
