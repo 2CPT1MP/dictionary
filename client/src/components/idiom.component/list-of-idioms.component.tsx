@@ -9,7 +9,7 @@ class IListOfIdiomsProps {}
 
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>([]);
-  const {headerConfig, authenticated, user} = useContext(UserContext);
+  const {headerConfig, user} = useContext(UserContext);
   const {get, patch, post} = useProtectedRoute();
 
   useEffect(() => {
@@ -95,12 +95,11 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
     <div className={"row"}>
       <AddIdiomComponent addIdiomFn={addIdiom}/>
       {idioms.map((idiom) =>
-        <div className={"col-sm-12 col-lg-6 col-xxl-4"}>
+        <div className={"col-sm-12 col-lg-6 col-xxl-4"} key={idiom._id}>
           <IdiomComponent idiom={idiom}
                           toggleLikeFn={toggleLikeIdiom}
                           toggleApproveFn={toggleApproveIdiom}
                           updateIdiomFn={updateIdiom}
-                          key={idiom._id}
           />
         </div>
       )}
