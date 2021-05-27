@@ -17,3 +17,11 @@ export class UpdateIdiomDto {
   field: string;
   quote: string;
 }
+
+export class ApproveIdiomDto {
+  approve: boolean;
+}
+
+export class LikeIdiomDto {
+  like: boolean;
+}

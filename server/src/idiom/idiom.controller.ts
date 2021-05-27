@@ -1,14 +1,37 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { IdiomService } from './idiom.service';
-import { AddIdiomDto, UpdateIdiomDto } from './idiom.dto';
+import {
+  AddIdiomDto,
+  ApproveIdiomDto,
+  LikeIdiomDto,
+  UpdateIdiomDto,
+} from './idiom.dto';
+import { Auth } from '../auth/guards/auth.guard';
+import { Role } from '../role/role.enum';
+import {query} from "express";
 
+@Auth()
 @Controller('api/idioms')
 export class IdiomController {
   constructor(private readonly idiomService: IdiomService) {}
 
   @Get()
-  async getIdioms() {
-    return await this.idiomService.getAllIdioms();
+  async getIdioms(
+    @Query('q') filter: string,
+    @Query('approved') approved?: boolean,
+  ) {
+    if (approved === undefined)
+      return await this.idiomService.getAllIdioms(filter);
+    return await this.idiomService.getAllIdioms(filter, approved);
   }
 
   @Get(':idiomId')
@@ -21,6 +44,7 @@ export class IdiomController {
     return await this.idiomService.addIdiom(idiomBody);
   }
 
+  @Auth(Role.Admin)
   @Patch(':idiomId')
   async updateIdiom(
     @Param('idiomId') idiomId: string,
@@ -29,13 +53,25 @@ export class IdiomController {
     return await this.idiomService.updateIdiom(idiomId, idiomBody);
   }
 
+  @Auth(Role.Admin)
   @Post(':idiomId/approve')
-  async approveIdiom(@Param('idiomId') idiomId: string) {
-    return await this.idiomService.approveIdiom(idiomId);
+  async approveIdiom(
+    @Param('idiomId') idiomId: string,
+    @Body() body: ApproveIdiomDto,
+  ) {
+    return await this.idiomService.approveIdiom(idiomId, body.approve);
   }
 
   @Post(':idiomId/like')
-  async likeIdiom(@Param('idiomId') idiomId: string) {
-    return await this.idiomService.likeIdiom(idiomId);
+  async likeIdiom(
+    @Req() request,
+    @Param('idiomId') idiomId: string,
+    @Body() body: LikeIdiomDto,
+  ) {
+    return await this.idiomService.likeIdiom(
+      idiomId,
+      request.user.userId,
+      body.like,
+    );
   }
 }

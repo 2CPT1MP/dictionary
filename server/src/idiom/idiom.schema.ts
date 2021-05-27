@@ -1,5 +1,7 @@
 import { Document } from 'mongoose';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
+import { UserClass } from '../user/user.schema';
 
 export type IdiomDocument = Idiom & Document;
 
@@ -10,6 +12,9 @@ export class Idiom {
 
   @Prop()
   definition: string;
+
+  @Prop({ type: Date, default: Date.now() })
+  timestamp: string;
 
   @Prop({ type: [String] })
   keywords: string[];
@@ -29,8 +34,8 @@ export class Idiom {
   @Prop({ default: false })
   approved: boolean;
 
-  @Prop()
-  likes: string[];
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'users' })
+  likes: UserClass[];
 }
 
 export const IdiomSchema = SchemaFactory.createForClass(Idiom);
