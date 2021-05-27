@@ -102,22 +102,23 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
 
   return (
     <>
-    <div className={"row mt-3"}>
-      <div className="col">
-        <AddIdiomComponent addIdiomFn={addIdiom}/>
-      </div>
-    </div>
-      {authenticated && <div className="row justify-content-end mt-5 ms-0 mb-3">
+
+      {authenticated && <div className="row justify-content-end mt-4 ms-0 mb-3">
           <div className="col-sm-12 col-md">
               <SearchComponent setFilter={setFilterData} filter={filterData}/>
           </div>
-        <div className="col-sm-12 col-md d-flex align-items-center">
+        <div className="col-sm-12 col-md-auto d-flex align-items-center">
           <div className="form-check form-switch">
             <input className="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckChecked" checked={approved} onChange={onApprovedChange}/>
             <label className="form-check-label " htmlFor="flexSwitchCheckChecked">Только {approved? "" : "не"}проверенные</label>
           </div>
         </div>
     </div>}
+        <div className={"row mb-2"}>
+          <div className="col">
+            <AddIdiomComponent addIdiomFn={addIdiom}/>
+          </div>
+      </div>
     <div className={"row"}>
       {idioms.map((idiom) =>
         <div className={"col-sm-12 col-lg-6 col-xxl-4"} key={idiom._id}>
