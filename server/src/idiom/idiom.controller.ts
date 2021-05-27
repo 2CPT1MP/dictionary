@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { IdiomService } from './idiom.service';
 import {
   AddIdiomDto,
@@ -15,8 +24,9 @@ export class IdiomController {
   constructor(private readonly idiomService: IdiomService) {}
 
   @Get()
-  async getIdioms() {
-    return await this.idiomService.getAllIdioms();
+  async getIdioms(@Query('approved') approved?: boolean) {
+    if (approved === undefined) return await this.idiomService.getAllIdioms();
+    return await this.idiomService.getAllIdioms(approved);
   }
 
   @Get(':idiomId')

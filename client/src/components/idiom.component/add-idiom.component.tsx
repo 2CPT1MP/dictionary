@@ -33,7 +33,7 @@ export const AddIdiomComponent: React.FC<IAddIdiomProps> = ({addIdiomFn}) => {
 
   return (
     <>
-      <div className={"col-12"}><button className={"btn shadow-none"} onClick={addIdiomHandler}><PlusCircle /></button></div>
+      <div className={"col-12 "}><button className={"btn shadow-none btn-dark mx-2"} onClick={addIdiomHandler}>Добавить <PlusCircle /> </button></div>
       {createMode && <div className={"col-sm-12 col-lg-6 col-xxl-4"}>
         <div className="card m-2 ">
           <div className="card-body">

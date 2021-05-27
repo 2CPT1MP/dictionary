@@ -56,6 +56,7 @@ export const LoginComponent: React.FC<ILoginProps> = () => {
         const response: AxiosResponse<UserResponseData> = await axios.post('http://localhost:5000/auth/register', loginData);
         setError("");
         setMessage("Успешная регистрация")
+        setRegisterMode(false);
         resolve(true);
       } catch (e) {
         setMessage("");

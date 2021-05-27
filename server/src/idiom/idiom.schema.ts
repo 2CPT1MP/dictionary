@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import {UserClass} from "../user/user.schema";
+import { UserClass } from '../user/user.schema';
 
 export type IdiomDocument = Idiom & Document;
 

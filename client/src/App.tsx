@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {ListOfIdiomsComponent} from "./components/idiom.component/list-of-idioms.component";
 import {LoginComponent} from "./components/login.component";
 import {UserProvider} from "./context/user.context";
+import './App.css';
 
 function App() {
   return (

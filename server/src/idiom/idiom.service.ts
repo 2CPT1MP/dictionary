@@ -10,8 +10,10 @@ export class IdiomService {
     @InjectModel(Idiom.name) private readonly idiomModel: Model<IdiomDocument>,
   ) {}
 
-  async getAllIdioms(): Promise<Idiom[]> {
-    return this.idiomModel.find({}).sort({ timestamp: -1 });
+  async getAllIdioms(approved?: boolean): Promise<Idiom[]> {
+    if (approved === undefined)
+      return this.idiomModel.find({}).sort({ timestamp: -1 });
+    return this.idiomModel.find({ approved: approved }).sort({ timestamp: -1 });
   }
 
   async getIdiomById(id: string): Promise<Idiom> {

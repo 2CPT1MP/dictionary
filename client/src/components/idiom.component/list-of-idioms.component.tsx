@@ -9,16 +9,21 @@ class IListOfIdiomsProps {}
 
 export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   const [idioms, setIdioms] = useState<IIdiom[]>([]);
-  const {headerConfig, user} = useContext(UserContext);
+  const [approved, setApproved] = useState<boolean>(true);
+  const {headerConfig, user, authenticated} = useContext(UserContext);
   const {get, patch, post} = useProtectedRoute();
 
   useEffect(() => {
       const fetchIdioms = async () => {
-        const data = await get<IIdiom[]>("http://localhost:5000/api/idioms")
+        const data = await get<IIdiom[]>(`http://localhost:5000/api/idioms?approved=${approved}`)
         setIdioms(data);
       }
       fetchIdioms();
-  }, [headerConfig]);
+  }, [headerConfig, approved]);
+
+  const onApprovedChange: React.ChangeEventHandler<HTMLInputElement> = () => {
+    setApproved(!approved);
+  }
 
 
   const updateIdiom = (idiomId: string, updatedIdiom: IUpdateIdiom) => {
@@ -92,8 +97,21 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
   }
 
   return (
+    <>
+    <div className={"row mt-3"}>
+      <div className="col">
+        <AddIdiomComponent addIdiomFn={addIdiom}/>
+      </div>
+    </div>
+      {authenticated && <div className="row justify-content-end">
+        <div className="col-auto me-2 mt-3">
+          <div className="form-check form-switch">
+            <input className="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckChecked" checked={approved} onChange={onApprovedChange}/>
+            <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Только {approved? "" : "не"}проверенные</label>
+          </div>
+        </div>
+    </div>}
     <div className={"row"}>
-      <AddIdiomComponent addIdiomFn={addIdiom}/>
       {idioms.map((idiom) =>
         <div className={"col-sm-12 col-lg-6 col-xxl-4"} key={idiom._id}>
           <IdiomComponent idiom={idiom}
@@ -104,5 +122,6 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
         </div>
       )}
     </div>
+    </>
   );
 }
