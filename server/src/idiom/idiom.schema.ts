@@ -13,6 +13,9 @@ export class Idiom {
   @Prop()
   definition: string;
 
+  @Prop({ type: Date, default: Date.now() })
+  timestamp: string;
+
   @Prop({ type: [String] })
   keywords: string[];
 

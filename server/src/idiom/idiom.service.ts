@@ -11,7 +11,7 @@ export class IdiomService {
   ) {}
 
   async getAllIdioms(): Promise<Idiom[]> {
-    return this.idiomModel.find();
+    return this.idiomModel.find({}).sort({ timestamp: -1 });
   }
 
   async getIdiomById(id: string): Promise<Idiom> {
