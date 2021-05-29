@@ -36,8 +36,8 @@ export const AddIdiomComponent: React.FC<IAddIdiomProps> = ({addIdiomFn}) => {
       {!createMode && <div className={"col-12 d-flex justify-content-center"}>
         <button className={"btn shadow-none mx-2"} onClick={addIdiomHandler}><PlusCircle size={32}/> </button>
       </div>}
-      {createMode && <div className={"col-sm-12 col-lg-6 col-xxl-4"}>
-        <div className="card m-2 ">
+      {createMode && <div className={"col-sm-12 col-lg-8 col-xl-6 mx-auto"}>
+        <div className="card m-2 justify-content-center">
           <div className="card-body">
           <EditIdiomComponent  idiom={emptyIdiom}
                                title={"Добавить фразеологизм"}

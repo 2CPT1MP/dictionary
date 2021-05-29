@@ -75,8 +75,11 @@ export const IdiomComponent: React.FC<IIdiomProps> = (props) => {
         <div className="card-body">
           {!editMode && <>
               <div className="row">
+                {props.idiom.approved && <div className="col-auto">
+                   <Spellcheck size={32}/>
+                </div>}
                   <div className="col">
-                    <h5 className="card-title">{props.idiom.approved? <Spellcheck size={32}/> : " "} {props.idiom.idiom}</h5>
+                    <h5 className="card-title">{props.idiom.idiom}</h5>
                   </div>
                   <div className="spinner-border col-auto me-3" role="status" hidden={!loading}>
                   </div>
