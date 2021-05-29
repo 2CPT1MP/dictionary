@@ -119,15 +119,15 @@ export const ListOfIdiomsComponent: React.FC<IListOfIdiomsProps> = () => {
             <AddIdiomComponent addIdiomFn={addIdiom}/>
           </div>
       </div>
-    <div className={"row"}>
+    <div className={"card-columns"}>
       {idioms.map((idiom) =>
-        <div className={"col-sm-12 col-lg-6 col-xxl-4"} key={idiom._id}>
+
           <IdiomComponent idiom={idiom}
                           toggleLikeFn={toggleLikeIdiom}
                           toggleApproveFn={toggleApproveIdiom}
                           updateIdiomFn={updateIdiom}
           />
-        </div>
+
       )}
     </div>
     </>

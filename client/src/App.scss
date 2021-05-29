@@ -1,0 +1,39 @@
+@import "~bootstrap/scss/_functions.scss";
+@import "~bootstrap/scss/_variables.scss";
+@import "~bootstrap/scss/mixins/_breakpoints.scss";
+
+.form-check-input:checked {
+  background-color: black!important;
+  border-color: black!important;
+  box-shadow:none !important;
+}
+
+.card-columns {
+  .card {
+    display: inline-block;
+    width: 100%;
+  }
+  @include media-breakpoint-only(sm) {
+    column-count: 1;
+  }
+
+  @include media-breakpoint-only(md) {
+    column-count: 2;
+  }
+
+  @include media-breakpoint-only(lg) {
+    column-count: 2;
+  }
+
+  @include media-breakpoint-only(xl) {
+    column-count: 3;
+  }
+
+  @include media-breakpoint-only(xxl) {
+    column-count: 3;
+  }
+
+  @include media-breakpoint-only(xxl) {
+    column-count: 3;
+  }
+}
