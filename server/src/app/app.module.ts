@@ -6,7 +6,7 @@ import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://username:password@mongo-db:27017/dictionary'),
+    MongooseModule.forRoot('mongodb://mongo-db:27017/dictionary'),
     UserModule,
     AuthModule,
     IdiomModule,
