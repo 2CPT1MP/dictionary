@@ -31,7 +31,7 @@ docker-compose up -d
 ## Running / stopping the app 
 In order to **stop the app** run the following command in project root:
 ```sh
-docker compose down
+docker-compose down
 ```
 You can **start** the app over **again** by running this in project root:
 ```sh
