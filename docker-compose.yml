@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: nest-server
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./server:/usr/app"
+      - "/usr/app/node_modules"
+
+  client:
+      build:
+        context: ./client
+        dockerfile: Dockerfile
+      container_name: react-client
+      ports:
+        - "80:3000"
+      volumes:
+        - "./client:/usr/app"
+        - "/usr/app/node_modules"
+      environment:
+        - CHOKIDAR_USE_POLLING=true
+
+  mongo-db:
+    image: mongo:latest
+    container_name: mongo-db
+    restart: always
+    volumes:
+      - "./mongo-db/data:/data/db:rw"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: mongo-web-admin
+    ports:
+      - "8081:8081"
+    environment:
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: username
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://mongo-db:27017/
+
